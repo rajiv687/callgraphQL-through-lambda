@@ -36,12 +36,13 @@ The build output after running `sam build` is placed in the `.aws-sam/build` dir
    ```bash
    sam build
    ```
+   ![alt text](assets/image-7.png)
 
 3. Deploy to AWS:
    ```bash
    sam deploy --guided
    ```
-
+![alt text](assets/image-8.png)
    During guided deploy, provide:
    - Stack name (e.g. `callGraphql`)
    - AWS region
