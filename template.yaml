@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Lambda calling GraphQL API (Node.js 20 + TypeScript with esbuild)
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+    Runtime: nodejs20.x
+
+Resources:
+  GraphQLCallerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: graphqlCaller.handler   # Entry point (after esbuild transpilation)
+      Runtime: nodejs20.x
+      Environment:
+        Variables:
+          GRAPHQL_API_URL: "https://u6ptuvsgprc75bwvvsrewqikty.appsync-api.us-west-1.amazonaws.com/graphql"
+          GRAPHQL_API_KEY: "da2-uiqrg2kddrbr3kpqv3wec7d6y4"
+      Policies:
+        - Statement:
+            Effect: Allow
+            Action:
+              - execute-api:Invoke
+            Resource: "*"
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - src/graphqlCaller.ts   # Your TypeScript file
+
+Outputs:
+  LambdaName:
+    Value: !Ref GraphQLCallerFunction
+    Description: Lambda that calls GraphQL API
